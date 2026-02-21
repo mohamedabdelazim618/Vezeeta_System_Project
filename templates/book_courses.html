@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Book Courses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='book_courses.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="floating-bubbles"></div>
+            <div class="brand">
+                <div class="logo">BC</div>
+                <div>
+                    <h1>Book Courses</h1>
+                    <div class="meta">Signed in as <strong>{{ username }}</strong></div>
+                </div>
+            </div>
+            <div class="actions">
+                <a class="btn btn-small" href="{{ url_for('dashboard') }}?username={{ username }}">Dashboard</a>
+                <a class="btn btn-small" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </header>
+        <script src="{{ url_for('static', filename='ui.js') }}"></script>
+
+        {% if message %}
+        <div class="message">{{ message }}</div>
+        {% endif %}
+
+        <section class="grid">
+            <div class="card" style="grid-column:1/-1">
+                <h3>Book a Course</h3>
+                <form method="POST" enctype="multipart/form-data">
+                    <label>Choose course</label>
+                    <select name="course_id" required>
+                        <option value="">-- select --</option>
+                        {% for course in courses %}
+                        <option value="{{ course.id }}">{{ course.title }} (Slots: {{ course.slots }})</option>
+                        {% endfor %}
+                    </select>
+
+                    <label>Mode</label>
+                    <label><input type="radio" name="mode" value="online" checked> Online</label>
+                    <label><input type="radio" name="mode" value="in-person"> In-person</label>
+
+                    <label>Gender</label>
+                    <label><input type="radio" name="gender" value="male" checked> Male</label>
+                    <label><input type="radio" name="gender" value="female"> Female</label>
+                    <label><input type="radio" name="gender" value="other"> Other</label>
+
+                    <label>Country</label>
+                    <select name="country" required>
+                        <option value="">-- select country --</option>
+                        <option value="United States">United States</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Australia">Australia</option>
+                        <option value="India">India</option>
+                    </select>
+
+                    <label>Upload supporting document (PDF, optional)</label>
+                    <input type="file" name="document" accept="application/pdf">
+
+                    <input type="hidden" name="username" value="{{ username }}">
+                    <div style="margin-top:8px"><button type="submit" class="btn btn-primary btn-file">Submit
+                            Booking</button></div>
+                </form>
+            </div>
+        </section>
+
+        <section style="margin-top:20px;">
+            <h3>Your Bookings</h3>
+            <ul>
+                {% if username and users.get(username) and users[username].get('bookings') %}
+                {% for booking in users[username].bookings %}
+                {% set c = (courses|selectattr('id','equalto',booking.course_id)|list)[0] %}
+                <li>
+                    {{ c.title }} — {{ booking.mode }} — {{ booking.gender }} — {{ booking.country }}
+                    {% if booking.filename %}
+                    — <a class="btn btn-ghost btn-small" href="/{{ booking.filename }}" target="_blank">View
+                        Document</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+                {% else %}
+                <li>No bookings yet.</li>
+                {% endif %}
+            </ul>
+        </section>
+
+    </div>
+</body>
+
+</html>

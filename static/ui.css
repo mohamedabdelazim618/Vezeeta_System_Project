@@ -1,0 +1,149 @@
+/* Shared UI utilities — creative buttons and accents */
+:root {
+    --btn-grad-1: linear-gradient(90deg, #7c3aed, #06b6d4);
+    --btn-grad-2: linear-gradient(90deg, #ff7a18, #af002d);
+    --glass: rgba(255, 255, 255, 0.12);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none
+}
+
+.btn-primary {
+    background: var(--btn-grad-1);
+    box-shadow: 0 12px 30px rgba(124, 58, 237, 0.18);
+    transition: transform .18s ease, box-shadow .18s ease
+}
+
+.btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 60px rgba(124, 58, 237, 0.22)
+}
+
+.btn-accent {
+    background: var(--btn-grad-2);
+    box-shadow: 0 10px 26px rgba(175, 0, 45, 0.14);
+}
+
+.btn-accent:hover {
+    transform: translateY(-3px)
+}
+
+.btn-ghost {
+    background: transparent;
+    color: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(6px);
+}
+
+.btn-small {
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 0.95rem
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer
+}
+
+/* focus rings & input glow */
+.input-glow:focus {
+    outline: none;
+    box-shadow: 0 6px 24px rgba(99, 102, 241, 0.18);
+    border-color: rgba(99, 102, 241, 0.6)
+}
+
+/* playful floating bubbles in headers */
+.floating-bubbles {
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+    overflow: hidden
+}
+
+.floating-bubbles span {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 999px;
+    opacity: 0.08;
+    filter: blur(18px);
+    transform: translate3d(0, 0, 0);
+    animation: float 8s infinite ease-in-out
+}
+
+.floating-bubbles span.b1 {
+    left: 5%;
+    top: 10%;
+    background: linear-gradient(90deg, #7c3aed, #06b6d4)
+}
+
+.floating-bubbles span.b2 {
+    right: 8%;
+    top: 30%;
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(90deg, #ff7a18, #f97316);
+    animation-duration: 10s
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg)
+    }
+
+    50% {
+        transform: translateY(-18px) rotate(6deg)
+    }
+
+    100% {
+        transform: translateY(0) rotate(0deg)
+    }
+}
+
+/* small utility */
+.kicker {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-weight: 700
+}
+
+/* ripple effect */
+.ripple {
+    position: absolute;
+    border-radius: 999px;
+    transform: scale(0);
+    pointer-events: none;
+    opacity: 0.6;
+    background: radial-gradient(circle, #ffffff 0%, rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0) 60%);
+    animation: ripple .6s ease-out;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(6);
+        opacity: 0;
+    }
+}

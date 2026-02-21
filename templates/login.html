@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui.css') }}">
+</head>
+
+<body>
+
+    <div class="box">
+        <h2>Login</h2>
+
+        {% if message %}
+        <p class="msg">{{ message }}</p>
+        {% endif %}
+
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+
+            <input id="password" type="password" name="password" placeholder="Password" required>
+            <label style="display:block; margin:8px 0; font-size:0.9em;"><input id="show_pwd" type="checkbox"> Show
+                password</label>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 15px;">
+            <p style="margin: 5px 0;">Don't have an account? <a href="{{ url_for('register') }}"
+                    style="color: #0a74f6; text-decoration: none;">Register here</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('show_pwd').addEventListener('change', function (e) {
+            var p = document.getElementById('password');
+            if (this.checked) {
+                p.type = 'text';
+            } else {
+                p.type = 'password';
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='ui.js') }}"></script>
+
+</body>
+
+</html>
