@@ -152,14 +152,12 @@ def logout():
     return redirect(url_for('login'))
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    if __name__ == "__main__":
+        app.run(debug=True)
 
-@app.route('/sayHello')   
+@app.route('/hello')   
 def hello():
-    username = request.args.get('username', 'Guest')
-    return f"Hello, {username}!"
-
+    return "Hello"
 
 if __name__ == "__main__":
     app.run(debug=True)
