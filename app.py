@@ -1,9 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
 import os
 
+# Load environment variables from .env file
+load_dotenv()
+
 app = Flask(__name__)
+
+# Configuration from environment variables
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
+app.config['DEBUG'] = os.getenv('DEBUG', 'True') == 'True'
 
 
 users = {}
@@ -166,4 +174,4 @@ def drinks():
     return render_template("index.html", drinks=drinks_list)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=app.config['DEBUG'])
