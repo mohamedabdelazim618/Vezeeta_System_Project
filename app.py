@@ -160,8 +160,10 @@ def hello():
 def welcome(name):
     return render_template("index.html", name=name)
 
-
-
+@app.route('/drinks')
+def drinks():
+    drinks_list = ["Coffee", "Tea", "Juice", "Water"]
+    return render_template("index.html", drinks=drinks_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
