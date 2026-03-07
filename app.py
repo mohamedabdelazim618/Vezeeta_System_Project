@@ -156,5 +156,12 @@ def logout():
 def hello():
     return "Hello"
 
+@app.route('/welcome/<name>')
+def welcome(name):
+    return render_template("index.html", name=name)
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
