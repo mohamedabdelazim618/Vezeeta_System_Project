@@ -25,6 +25,7 @@
                     <a class="btn btn-small" href="{{ url_for('home') }}">Home</a>
                     <a class="btn btn-small" href="{{ url_for('courses_page') }}?username={{ username }}">Book
                         Courses</a>
+                    <a class="btn btn-small" href="{{ url_for('welcome', name=username) }}">Testing</a>
                     <a class="btn btn-small" href="{{ url_for('logout') }}">Logout</a>
                 </div>
             </header>
