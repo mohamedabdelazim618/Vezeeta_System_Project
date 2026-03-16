@@ -173,5 +173,43 @@ def drinks():
     drinks_list = ["Coffee", "Tea", "Juice", "Water"]
     return render_template("index.html", drinks=drinks_list)
 
+
+@app.route('/form', methods=['GET'])
+def form_page():
+    return render_template("form.html", message="")
+
+
+@app.route('/signup-results', methods=['GET', 'POST'])
+def signup_results():
+    message = ""
+    name = ""
+    grade = ""
+    level = ""
+    mark = ""
+    
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        grade = request.form.get('grade', '').strip()
+        level = request.form.get('level', '').strip()
+        mark = request.form.get('mark', '').strip()
+        
+        if not name or not grade or not level or not mark:
+            message = "All fields are required."
+            return render_template("form.html", message=message)
+        else:
+            try:
+                mark_int = int(mark)
+                if mark_int < 0 or mark_int > 100:
+                    message = "Mark must be between 0 and 100."
+                    return render_template("form.html", message=message)
+                else:
+                    return render_template("sigup_results.html", name=name, grade=grade, level=level, mark=mark_int)
+            except ValueError:
+                message = "Mark must be a valid number."
+                return render_template("form.html", message=message)
+    
+    return render_template("form.html", message=message)
+
+
 if __name__ == "__main__":
     app.run(debug=app.config['DEBUG'])

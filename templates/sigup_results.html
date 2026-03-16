@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submission Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='results.css') }}">
+</head>
+
+<body>
+    <div class="results-container">
+        <h1>Submission Successful!</h1>
+        <p class="subtitle">Here are the details you submitted:</p>
+
+        <div class="results-card">
+            <div class="result-item">
+                <label>Name:</label>
+                <span class="value">{{ name }}</span>
+            </div>
+
+            <div class="result-item">
+                <label>Grade:</label>
+                <span class="value">{{ grade }}</span>
+            </div>
+
+            <div class="result-item">
+                <label>Level:</label>
+                <span class="value">{{ level }}</span>
+            </div>
+
+            <div class="result-item">
+                <label>Mark:</label>
+                <span class="value">{{ mark }}</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('form_page') }}" class="btn btn-primary">Submit Another Form</a>
+            <a href="{{ url_for('dashboard', username='User') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+
+</html>
