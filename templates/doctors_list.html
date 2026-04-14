@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>All Doctors - Vezeeta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='doctors_list.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="floating-bubbles"></div>
+            <div class="brand">
+                <div class="logo">DR</div>
+                <div>
+                    <h1>All Doctors</h1>
+                    <div class="meta">Signed in as <strong>{{ username }}</strong></div>
+                </div>
+            </div>
+            <div class="actions">
+                <a class="btn btn-small" href="{{ url_for('dashboard') }}?username={{ username }}">Dashboard</a>
+                <a class="btn btn-small" href="{{ url_for('appointments_page') }}?username={{ username }}">Book
+                    Appointment</a>
+                <a class="btn btn-small" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </header>
+        <script src="{{ url_for('static', filename='ui.js') }}"></script>
+
+        <section class="grid doctors-grid-section">
+            <h2>Our Healthcare Specialists ({{ doctors|length }} Doctors)</h2>
+            <p class="meta">Find and book an appointment with our experienced doctors</p>
+
+            <div class="card search-filter-card">
+                <h3>Search or Filter</h3>
+                <div class="search-filter-grid">
+                    <div>
+                        <input type="text" id="searchInput" placeholder="Search by doctor name..." class="search-input">
+                    </div>
+                    <div>
+                        <input type="text" id="specialtyInput" placeholder="Filter by specialty..."
+                            class="search-input">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid doctors-grid-section">
+            <div id="doctorsList" class="doctors-list-container">
+                <!-- Doctors will be displayed here -->
+            </div>
+        </section>
+    </div>
+
+    <div id="data" data-doctors="{{ doctors | tojson }}" data-username="{{ username }}" style="display: none;"></div>
+
+    <script>
+        const doctors = JSON.parse(document.getElementById('data').dataset.doctors);
+        const username = document.getElementById('data').dataset.username;
+
+        function renderDoctors(doctorsToRender) {
+            const container = document.getElementById('doctorsList');
+
+            if (doctorsToRender.length === 0) {
+                container.innerHTML = '<div class="no-results">No doctors found matching your search criteria.</div>';
+                return;
+            }
+
+            container.innerHTML = doctorsToRender.map(doctor => `
+                <div class="doctor-card">
+                    <h3>${doctor.name}</h3>
+                    <span class="doctor-specialty">${doctor.specialty}</span>
+                    <div class="doctor-info">
+                        <div>
+                            <p class="doctor-hospital">🏥 ${doctor.hospital}</p>
+                        </div>
+                        <div>
+                            <p><strong>Available Slots:</strong> ${doctor.slots}</p>
+                        </div>
+                    </div>
+                    <div class="doctor-slots">
+                        ${doctor.slots} Appointment Slots Available
+                    </div>
+                    <button class="book-btn" onclick="bookAppointment(${doctor.id})">Book Appointment</button>
+                </div>
+            `).join('');
+        }
+
+        function filterDoctors() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const specialtyValue = document.getElementById('specialtyInput').value.toLowerCase();
+
+            const filtered = doctors.filter(doctor => {
+                const nameMatch = doctor.name.toLowerCase().includes(searchValue) || searchValue === '';
+                const specialtyMatch = doctor.specialty.toLowerCase().includes(specialtyValue) || specialtyValue === '';
+                return nameMatch && specialtyMatch;
+            });
+
+            renderDoctors(filtered);
+        }
+
+        function bookAppointment(doctorId) {
+            window.location.href = `{{ url_for('appointments_page') }}?username=${username}&doctor_id=${doctorId}`;
+        }
+
+        // Load saved theme preference
+        if (localStorage.getItem('darkTheme') === 'true') {
+            document.body.classList.add('dark-theme');
+        }
+
+        // Add event listeners for search and filter
+        document.getElementById('searchInput').addEventListener('keyup', filterDoctors);
+        document.getElementById('specialtyInput').addEventListener('keyup', filterDoctors);
+
+        // Initial render
+        renderDoctors(doctors);
+    </script>
+</body>
+
+</html>

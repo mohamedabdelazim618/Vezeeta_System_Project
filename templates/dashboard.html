@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Dashboard</title>
+    <title>Vezeeta - Patient Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
 
@@ -15,17 +15,16 @@
             <header>
                 <div class="floating-bubbles"></div>
                 <div class="brand">
-                    <div class="logo">DB</div>
+                    <div class="logo">VZ</div>
                     <div>
-                        <h1>Dashboard</h1>
+                        <h1>Vezeeta - Your Healthcare Hub</h1>
                         <div class="meta">Signed in as <strong>{{ username }}</strong></div>
                     </div>
                 </div>
                 <div class="actions">
                     <a class="btn btn-small" href="{{ url_for('home') }}">Home</a>
-                    <a class="btn btn-small" href="{{ url_for('courses_page') }}?username={{ username }}">Book
-                        Courses</a>
-                    <a class="btn btn-small" href="{{ url_for('welcome', name=username) }}">Testing</a>
+                    <a class="btn btn-small" href="{{ url_for('appointments_page') }}?username={{ username }}">Book
+                        Appointment</a>
                     <a class="btn btn-small" href="{{ url_for('logout') }}">Logout</a>
                 </div>
             </header>
@@ -40,19 +39,19 @@
             <!-- Sidebar Container -->
             <aside class="sidebar-container">
                 <nav class="nav-container">
-                    <div class="nav-item active">
+                    <div class="nav-item active" onclick="scrollToSection('overview')">
                         <span>📊</span>
                         <p>Overview</p>
                     </div>
-                    <div class="nav-item">
-                        <span>📚</span>
-                        <p>Courses</p>
+                    <div class="nav-item" onclick="navigateToDoctors()">
+                        <span>🏥</span>
+                        <p>Doctors</p>
                     </div>
-                    <div class="nav-item">
-                        <span>✅</span>
-                        <p>Tasks</p>
+                    <div class="nav-item" onclick="navigateToAppointments()">
+                        <span>📅</span>
+                        <p>Appointments</p>
                     </div>
-                    <div class="nav-item">
+                    <div class="nav-item" onclick="navigateToSettings()">
                         <span>⚙️</span>
                         <p>Settings</p>
                     </div>
@@ -64,126 +63,29 @@
                 <!-- Welcome Banner Container -->
                 <section class="container-banner welcome card">
                     <div>
-                        <h2 style="margin:0">Welcome back, {{ username }} 🎉</h2>
-                        <p class="meta">Here's a quick summary of your account.</p>
+                        <h2 style="margin:0">Welcome back, {{ username }} 👋</h2>
+                        <p class="meta">Book an appointment with our healthcare professionals.</p>
                     </div>
-                    <div class="meta">Last login: <strong>just now</strong></div>
+                    <div class="meta">Health is wealth</div>
                 </section>
 
                 <!-- Stats Grid Container -->
-                <section class="container-grid stats-section">
-                    <h3 style="grid-column: 1 / -1; margin-top: 0;">Quick Stats</h3>
+                <section id="overview" class="container-grid stats-section">
+                    <h3 style="grid-column: 1 / -1; margin-top: 0;">Your Health Overview</h3>
                     <div class="card">
-                        <h3>Projects</h3>
+                        <h3>Appointments</h3>
+                        <div class="value">{{ users.get(username, {}).get('appointments', [])|length }}</div>
+                        <p class="meta">Total bookings</p>
+                    </div>
+                    <div class="card">
+                        <h3>Doctors</h3>
+                        <div class="value">{{ doctors|length }}</div>
+                        <p class="meta">Available specialists</p>
+                    </div>
+                    <div class="card">
+                        <h3>Hospitals</h3>
                         <div class="value">3</div>
-                        <p class="meta">Active projects</p>
-                    </div>
-                    <div class="card">
-                        <h3>Tasks</h3>
-                        <div class="value">12</div>
-                        <p class="meta">Pending tasks</p>
-                    </div>
-                    <div class="card">
-                        <h3>Notifications</h3>
-                        <div class="value">4</div>
-                        <p class="meta">Unread alerts</p>
-                    </div>
-                </section>
-
-                <!-- Flex Container Section -->
-                <section class="container-flex">
-                    <h3>Recent Activity</h3>
-                    <div class="flex-row">
-                        <div class="card card-sm">
-                            <span class="icon">📝</span>
-                            <div>
-                                <h4>Course Enrolled</h4>
-                                <p class="meta">2 hours ago</p>
-                            </div>
-                        </div>
-                        <div class="card card-sm">
-                            <span class="icon">✨</span>
-                            <div>
-                                <h4>Task Completed</h4>
-                                <p class="meta">5 hours ago</p>
-                            </div>
-                        </div>
-                        <div class="card card-sm">
-                            <span class="icon">🏆</span>
-                            <div>
-                                <h4>Badge Earned</h4>
-                                <p class="meta">1 day ago</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Two Column Container -->
-                <section class="container-two-column">
-                    <!-- Left Column -->
-                    <div class="column">
-                        <div class="card">
-                            <h3>📚 Learning Path</h3>
-                            <div class="progress-item">
-                                <div class="progress-label">
-                                    <span>Python Basics</span>
-                                    <span>75%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 75%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-label">
-                                    <span>Web Development</span>
-                                    <span>45%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 45%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column -->
-                    <div class="column">
-                        <div class="card">
-                            <h3>🎯 Goals</h3>
-                            <ul class="goals-list">
-                                <li>✓ Complete React course</li>
-                                <li>✓ Build 2 projects</li>
-                                <li>→ Learn Docker</li>
-                                <li>→ Master Databases</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Card Grid Container with Overlay -->
-                <section class="container-card-grid">
-                    <h3>Featured Courses</h3>
-                    <div class="card-grid">
-                        <div class="card card-featured">
-                            <div class="card-header">Python 101</div>
-                            <div class="card-content">
-                                <p>Learn Python fundamentals</p>
-                                <button class="btn-outline">View Course</button>
-                            </div>
-                        </div>
-                        <div class="card card-featured">
-                            <div class="card-header">Web Dev</div>
-                            <div class="card-content">
-                                <p>HTML, CSS & JavaScript</p>
-                                <button class="btn-outline">View Course</button>
-                            </div>
-                        </div>
-                        <div class="card card-featured">
-                            <div class="card-header">Data Science</div>
-                            <div class="card-content">
-                                <p>Data analysis with Python</p>
-                                <button class="btn-outline">View Course</button>
-                            </div>
-                        </div>
+                        <p class="meta">Partner hospitals</p>
                     </div>
                 </section>
 
@@ -194,7 +96,7 @@
         <section class="container-fluid footer-section">
             <div class="container">
                 <div class="footer-content">
-                    <p>&copy; 2026 Dashboard. All rights reserved.</p>
+                    <p>&copy; 2026 Vezeeta Healthcare. All rights reserved.</p>
                     <div class="footer-links">
                         <a href="#">Privacy</a>
                         <a href="#">Terms</a>
@@ -204,6 +106,242 @@
             </div>
         </section>
     </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings ⚙️</h2>
+                <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Theme</h3>
+                    <label class="setting-item">
+                        <input type="checkbox" id="darkThemeToggle" onchange="toggleDarkTheme()">
+                        <span>Dark Theme</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Dark Theme */
+        body.dark-theme {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .container,
+        body.dark-theme .card,
+        body.dark-theme .hero-section {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .card {
+            border: 1px solid #444;
+            background-color: #333;
+        }
+
+        body.dark-theme header {
+            background-color: #1a1a1a;
+            border-bottom: 1px solid #444;
+        }
+
+        body.dark-theme .nav-item {
+            color: #e0e0e0;
+        }
+
+        body.dark-theme .nav-item:hover {
+            background-color: #444;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-theme .modal-content {
+            background-color: #333;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-theme .modal-header {
+            border-bottom: 1px solid #444;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #333;
+        }
+
+        body.dark-theme .close-btn {
+            color: #e0e0e0;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .settings-section {
+            margin-bottom: 20px;
+        }
+
+        .settings-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .setting-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        body.dark-theme .setting-item:hover {
+            background-color: #444;
+        }
+
+        .setting-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* RTL Support */
+        [dir="rtl"] .modal-header {
+            flex-direction: row-reverse;
+        }
+    </style>
+
+    <script>
+        // Close modal when clicking outside
+        window.addEventListener('click', function (event) {
+            const modal = document.getElementById('settingsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Load dark theme checkbox state on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const darkThemeCheckbox = document.getElementById('darkThemeToggle');
+            if (darkThemeCheckbox && localStorage.getItem('darkTheme') === 'true') {
+                darkThemeCheckbox.checked = true;
+            }
+        });
+    </script>
+
+    <script>
+        // Activate sidebar navigation
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                updateActiveNavItem(event.currentTarget);
+            }
+        }
+
+        function navigateToDoctors() {
+            window.location.href = "{{ url_for('doctors_list') }}?username={{ username }}";
+        }
+
+        function navigateToAppointments() {
+            window.location.href = "{{ url_for('appointments_page') }}?username={{ username }}";
+        }
+
+        function navigateToSettings() {
+            showSettingsModal();
+        }
+
+        function showSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function toggleDarkTheme() {
+            const isDark = document.body.classList.toggle('dark-theme');
+            localStorage.setItem('darkTheme', isDark);
+        }
+
+        // Load saved theme preference
+        window.addEventListener('load', function () {
+            if (localStorage.getItem('darkTheme') === 'true') {
+                document.body.classList.add('dark-theme');
+            }
+        });
+
+        function updateActiveNavItem(clickedItem) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+            }
+        }
+
+        // Make sidebar items clickable with pointer style
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.style.cursor = 'pointer';
+            item.addEventListener('mouseover', function () {
+                this.style.opacity = '0.8';
+            });
+            item.addEventListener('mouseout', function () {
+                this.style.opacity = '1';
+            });
+        });
+    </script>
 </body>
 
 </html>

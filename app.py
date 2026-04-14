@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import os
 
@@ -16,21 +15,19 @@ app.config['DEBUG'] = os.getenv('DEBUG', 'True') == 'True'
 
 users = {}
 
-# sample courses available to book
-courses = [
-    {"id": 1, "title": "Python 101", "slots": 10, "description": "Intro to Python programming."},
-    {"id": 2, "title": "Web Development", "slots": 8, "description": "Build web apps with Flask."},
-    {"id": 3, "title": "Data Science", "slots": 5, "description": "Basics of data analysis."},
+# Available doctors for appointments
+doctors = [
+    {"id": 1, "name": "Dr. Ahmed Hassan", "specialty": "General Practitioner", "slots": 10, "hospital": "Cairo Medical Center"},
+    {"id": 2, "name": "Dr. Fatima Mohamed", "specialty": "Cardiologist", "slots": 8, "hospital": "Nile Valley Hospital"},
+    {"id": 3, "name": "Dr. Omar Khalil", "specialty": "Orthopedist", "slots": 5, "hospital": "Modern Medical Institute"},
+    {"id": 4, "name": "Dr. Layla Samir", "specialty": "Dermatologist", "slots": 6, "hospital": "Cairo Medical Center"},
+    {"id": 5, "name": "Dr. Hassan Musa", "specialty": "Neurologist", "slots": 4, "hospital": "Nile Valley Hospital"},
+    {"id": 6, "name": "Dr. Mona Karim", "specialty": "Pediatrician", "slots": 12, "hospital": "Advanced Medical Center"},
+    {"id": 7, "name": "Dr. Youssef Adel", "specialty": "Ophthalmologist", "slots": 7, "hospital": "Modern Medical Institute"},
+    {"id": 8, "name": "Dr. Yasmin Helmy", "specialty": "Gynecologist", "slots": 9, "hospital": "Advanced Medical Center"},
+    {"id": 9, "name": "Dr. Tarek Saleh", "specialty": "Dentist", "slots": 11, "hospital": "Elite Dental Clinic"},
+    {"id": 10, "name": "Dr. Sara Mansour", "specialty": "Psychiatrist", "slots": 5, "hospital": "Mental Health Institute"},
 ]
-# uploads folder
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-ALLOWED_EXTENSIONS = {'pdf'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 
 @app.route('/')
@@ -89,70 +86,70 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    
     username = request.args.get('username', 'User')  
-    return render_template("dashboard.html", username=username)
+    return render_template("dashboard.html", username=username, doctors=doctors, users=users)
 
 
-@app.route('/courses', methods=['GET', 'POST'])
-def courses_page():
+@app.route('/appointments', methods=['GET', 'POST'])
+def appointments_page():
     message = ""
     username = request.values.get('username', '')
 
     if request.method == 'POST':
-        course_id = request.form.get('course_id')
+        doctor_id = request.form.get('doctor_id')
         username = request.form.get('username', '')
-        mode = request.form.get('mode', 'online')
-        gender = request.form.get('gender', '')
-        country = request.form.get('country', '')
-        file = request.files.get('document')
+        appointment_date = request.form.get('appointment_date', '')
+        appointment_time = request.form.get('appointment_time', '')
+        phone = request.form.get('phone', '')
+        symptoms = request.form.get('symptoms', '')
 
         if not username or username not in users:
             message = "Invalid user. Please login first."
-            return render_template('book_courses.html', username=username, courses=courses, message=message, users=users)
+            return render_template('book_appointments.html', username=username, doctors=doctors, message=message, users=users)
 
-        # validate course id
+        # validate doctor id
         try:
-            cid = int(course_id)
+            did = int(doctor_id)
         except (TypeError, ValueError):
-            message = "Invalid course selected."
-            return render_template('book_courses.html', username=username, courses=courses, message=message, users=users)
+            message = "Invalid doctor selected."
+            return render_template('book_appointments.html', username=username, doctors=doctors, message=message, users=users)
 
-        course = next((c for c in courses if c['id'] == cid), None)
-        if not course:
-            message = "Course not found."
-            return render_template('book_courses.html', username=username, courses=courses, message=message, users=users)
+        doctor = next((d for d in doctors if d['id'] == did), None)
+        if not doctor:
+            message = "Doctor not found."
+            return render_template('book_appointments.html', username=username, doctors=doctors, message=message, users=users)
 
-        # handle file upload
-        saved_filename = None
-        if file and file.filename:
-            if allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                saved_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(saved_path)
-                # expose via relative path from app root
-                saved_filename = os.path.relpath(saved_path).replace('\\', '/')
-            else:
-                message = "Only PDF files are allowed for upload."
-                return render_template('book_courses.html', username=username, courses=courses, message=message, users=users)
+        # validate appointment date and time
+        if not appointment_date or not appointment_time:
+            message = "Please select both date and time for your appointment."
+            return render_template('book_appointments.html', username=username, doctors=doctors, message=message, users=users)
 
-        # initialize bookings list
-        users[username].setdefault('bookings', [])
-        # prevent duplicate booking of same course/mode
-        existing = [b for b in users[username]['bookings'] if b.get('course_id') == cid and b.get('mode') == mode]
+        # initialize appointments list
+        users[username].setdefault('appointments', [])
+        # prevent duplicate booking of same doctor at same time
+        existing = [a for a in users[username]['appointments'] if a.get('doctor_id') == did and a.get('appointment_date') == appointment_date and a.get('appointment_time') == appointment_time]
         if existing:
-            message = f"You have already booked '{course['title']}' ({mode})."
+            message = f"You have already booked an appointment with {doctor['name']} at {appointment_time} on {appointment_date}."
         else:
-            users[username]['bookings'].append({
-                'course_id': cid,
-                'mode': mode,
-                'gender': gender,
-                'country': country,
-                'filename': saved_filename,
+            users[username]['appointments'].append({
+                'doctor_id': did,
+                'doctor_name': doctor['name'],
+                'specialty': doctor['specialty'],
+                'hospital': doctor['hospital'],
+                'appointment_date': appointment_date,
+                'appointment_time': appointment_time,
+                'phone': phone,
+                'symptoms': symptoms,
             })
-            message = f"Successfully booked '{course['title']}' ({mode})."
+            message = f"Appointment successfully booked with {doctor['name']} ({doctor['specialty']}) on {appointment_date} at {appointment_time}."
 
-    return render_template('book_courses.html', username=username, courses=courses, message=message, users=users)
+    return render_template('book_appointments.html', username=username, doctors=doctors, message=message, users=users)
+
+
+@app.route('/doctors')
+def doctors_list():
+    username = request.args.get('username', 'User')
+    return render_template('doctors_list.html', username=username, doctors=doctors)
 
 
 @app.route('/logout')
@@ -160,55 +157,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/hello')   
-def hello():
-    return "Hello"
-
-@app.route('/welcome/<name>')
-def welcome(name):
-    return render_template("index.html", name=name)
-
-@app.route('/drinks')
-def drinks():
-    drinks_list = ["Coffee", "Tea", "Juice", "Water"]
-    return render_template("index.html", drinks=drinks_list)
-
-
-@app.route('/form', methods=['GET'])
-def form_page():
-    return render_template("form.html", message="")
-
-
-@app.route('/signup-results', methods=['GET', 'POST'])
-def signup_results():
-    message = ""
-    name = ""
-    grade = ""
-    level = ""
-    mark = ""
-    
-    if request.method == 'POST':
-        name = request.form.get('name', '').strip()
-        grade = request.form.get('grade', '').strip()
-        level = request.form.get('level', '').strip()
-        mark = request.form.get('mark', '').strip()
-        
-        if not name or not grade or not level or not mark:
-            message = "All fields are required."
-            return render_template("form.html", message=message)
-        else:
-            try:
-                mark_int = int(mark)
-                if mark_int < 0 or mark_int > 100:
-                    message = "Mark must be between 0 and 100."
-                    return render_template("form.html", message=message)
-                else:
-                    return render_template("sigup_results.html", name=name, grade=grade, level=level, mark=mark_int)
-            except ValueError:
-                message = "Mark must be a valid number."
-                return render_template("form.html", message=message)
-    
-    return render_template("form.html", message=message)
 
 
 if __name__ == "__main__":
