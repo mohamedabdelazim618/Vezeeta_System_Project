@@ -115,49 +115,11 @@
                 <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="settings-section">
-                    <h3>Theme</h3>
-                    <label class="setting-item">
-                        <input type="checkbox" id="darkThemeToggle" onchange="toggleDarkTheme()">
-                        <span>Dark Theme</span>
-                    </label>
-                </div>
             </div>
         </div>
     </div>
 
     <style>
-        /* Dark Theme */
-        body.dark-theme {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
-        }
-
-        body.dark-theme .container,
-        body.dark-theme .card,
-        body.dark-theme .hero-section {
-            background-color: #2d2d2d;
-            color: #e0e0e0;
-        }
-
-        body.dark-theme .card {
-            border: 1px solid #444;
-            background-color: #333;
-        }
-
-        body.dark-theme header {
-            background-color: #1a1a1a;
-            border-bottom: 1px solid #444;
-        }
-
-        body.dark-theme .nav-item {
-            color: #e0e0e0;
-        }
-
-        body.dark-theme .nav-item:hover {
-            background-color: #444;
-        }
-
         /* Modal Styles */
         .modal {
             position: fixed;
@@ -180,20 +142,12 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        body.dark-theme .modal-content {
-            background-color: #333;
-        }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
             border-bottom: 1px solid #ddd;
-        }
-
-        body.dark-theme .modal-header {
-            border-bottom: 1px solid #444;
         }
 
         .modal-header h2 {
@@ -207,10 +161,6 @@
             font-size: 2em;
             cursor: pointer;
             color: #333;
-        }
-
-        body.dark-theme .close-btn {
-            color: #e0e0e0;
         }
 
         .modal-body {
@@ -241,10 +191,6 @@
             background-color: #f0f0f0;
         }
 
-        body.dark-theme .setting-item:hover {
-            background-color: #444;
-        }
-
         .setting-item input[type="checkbox"] {
             width: 18px;
             height: 18px;
@@ -263,14 +209,6 @@
             const modal = document.getElementById('settingsModal');
             if (event.target === modal) {
                 modal.style.display = 'none';
-            }
-        });
-
-        // Load dark theme checkbox state on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            const darkThemeCheckbox = document.getElementById('darkThemeToggle');
-            if (darkThemeCheckbox && localStorage.getItem('darkTheme') === 'true') {
-                darkThemeCheckbox.checked = true;
             }
         });
     </script>
@@ -311,17 +249,6 @@
             }
         }
 
-        function toggleDarkTheme() {
-            const isDark = document.body.classList.toggle('dark-theme');
-            localStorage.setItem('darkTheme', isDark);
-        }
-
-        // Load saved theme preference
-        window.addEventListener('load', function () {
-            if (localStorage.getItem('darkTheme') === 'true') {
-                document.body.classList.add('dark-theme');
-            }
-        });
 
         function updateActiveNavItem(clickedItem) {
             const navItems = document.querySelectorAll('.nav-item');

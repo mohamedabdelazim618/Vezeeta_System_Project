@@ -110,33 +110,3 @@
     color: #999;
     font-size: 1.1em;
 }
-
-/* Dark theme for doctors list */
-body.dark-theme .doctor-card {
-    background: #333;
-    border-color: #444;
-    color: #e0e0e0;
-}
-
-body.dark-theme .doctor-card h3 {
-    color: #61a7ff;
-}
-
-body.dark-theme .doctor-specialty {
-    background: #444;
-    color: #e0e0e0;
-}
-
-body.dark-theme .search-input {
-    background: #333;
-    color: #e0e0e0;
-    border-color: #555;
-}
-
-body.dark-theme .book-btn {
-    background: #0a74f6;
-}
-
-body.dark-theme .book-btn:hover {
-    background: #0860d4;
-}

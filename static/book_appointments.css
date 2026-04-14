@@ -33,12 +33,3 @@
     display: block;
     margin: 4px 0;
 }
-
-/* Dark theme for appointments */
-body.dark-theme .appointments-list li {
-    background: rgba(100, 100, 100, 0.3);
-}
-
-body.dark-theme .appointments-list li strong {
-    color: #61a7ff;
-}

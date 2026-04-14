@@ -106,11 +106,6 @@
             window.location.href = `{{ url_for('appointments_page') }}?username=${username}&doctor_id=${doctorId}`;
         }
 
-        // Load saved theme preference
-        if (localStorage.getItem('darkTheme') === 'true') {
-            document.body.classList.add('dark-theme');
-        }
-
         // Add event listeners for search and filter
         document.getElementById('searchInput').addEventListener('keyup', filterDoctors);
         document.getElementById('specialtyInput').addEventListener('keyup', filterDoctors);
