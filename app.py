@@ -139,7 +139,40 @@ def appointments_page():
     return render_template('book_appointments.html', username=username, doctors=doctors, message=message, users=users)
 
 
-@app.route('/doctors')
+@app.route('/cancel-appointment', methods=['POST'])
+def cancel_appointment():
+    username = request.form.get('username', '')
+    doctor_id = request.form.get('doctor_id', '')
+    appointment_date = request.form.get('appointment_date', '')
+    appointment_time = request.form.get('appointment_time', '')
+    
+    message = ""
+    
+    if not username or username not in users:
+        message = "Invalid user. Please login first."
+    else:
+        try:
+            did = int(doctor_id)
+        except (TypeError, ValueError):
+            message = "Invalid doctor ID."
+        
+        if did and not message:
+            appointments = users[username].get('appointments', [])
+            appointment_found = False
+            
+            for i, apt in enumerate(appointments):
+                if (apt.get('doctor_id') == did and 
+                    apt.get('appointment_date') == appointment_date and 
+                    apt.get('appointment_time') == appointment_time):
+                    removed_apt = appointments.pop(i)
+                    message = f"Appointment with {removed_apt['doctor_name']} on {appointment_date} at {appointment_time} has been cancelled."
+                    appointment_found = True
+                    break
+            
+            if not appointment_found:
+                message = "Appointment not found."
+    
+    return render_template('book_appointments.html', username=username, doctors=doctors, message=message, users=users)
 def doctors_list():
     username = request.args.get('username', 'User')
     return render_template('doctors_list.html', username=username, doctors=doctors)
