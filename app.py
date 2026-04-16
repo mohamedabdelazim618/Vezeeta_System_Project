@@ -173,6 +173,9 @@ def cancel_appointment():
                 message = "Appointment not found."
     
     return render_template('book_appointments.html', username=username, doctors=doctors, message=message, users=users)
+
+
+@app.route('/doctors')
 def doctors_list():
     username = request.args.get('username', 'User')
     return render_template('doctors_list.html', username=username, doctors=doctors)
