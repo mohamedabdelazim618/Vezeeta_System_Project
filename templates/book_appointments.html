@@ -70,14 +70,23 @@
             <ul class="appointments-list">
                 {% if username and users.get(username) and users[username].get('appointments') %}
                 {% for appointment in users[username].appointments %}
-                <li>
-                    <strong>{{ appointment.doctor_name }}</strong> ({{ appointment.specialty }}) — {{
-                    appointment.hospital }}<br>
-                    📅 {{ appointment.appointment_date }} at {{ appointment.appointment_time }}<br>
-                    📞 {{ appointment.phone }}<br>
-                    {% if appointment.symptoms %}
-                    💬 Symptoms: {{ appointment.symptoms }}
-                    {% endif %}
+                <li class="appointment-item">
+                    <div class="appointment-details">
+                        <strong>{{ appointment.doctor_name }}</strong> ({{ appointment.specialty }}) — {{
+                        appointment.hospital }}<br>
+                        📅 {{ appointment.appointment_date }} at {{ appointment.appointment_time }}<br>
+                        📞 {{ appointment.phone }}<br>
+                        {% if appointment.symptoms %}
+                        💬 Symptoms: {{ appointment.symptoms }}
+                        {% endif %}
+                    </div>
+                    <form method="POST" action="{{ url_for('cancel_appointment') }}" class="cancel-form">
+                        <input type="hidden" name="username" value="{{ username }}">
+                        <input type="hidden" name="doctor_id" value="{{ appointment.doctor_id }}">
+                        <input type="hidden" name="appointment_date" value="{{ appointment.appointment_date }}">
+                        <input type="hidden" name="appointment_time" value="{{ appointment.appointment_time }}">
+                        <button type="submit" class="btn-cancel">Cancel</button>
+                    </form>
                 </li>
                 {% endfor %}
                 {% else %}
