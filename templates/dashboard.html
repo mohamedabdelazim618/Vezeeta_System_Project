@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Dashboard</title>
+    <title>Vezeeta - Patient Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
 
@@ -15,17 +15,16 @@
             <header>
                 <div class="floating-bubbles"></div>
                 <div class="brand">
-                    <div class="logo">DB</div>
+                    <div class="logo">VZ</div>
                     <div>
-                        <h1>Dashboard</h1>
+                        <h1>Vezeeta - Your Healthcare Hub</h1>
                         <div class="meta">Signed in as <strong>{{ username }}</strong></div>
                     </div>
                 </div>
                 <div class="actions">
                     <a class="btn btn-small" href="{{ url_for('home') }}">Home</a>
-                    <a class="btn btn-small" href="{{ url_for('courses_page') }}?username={{ username }}">Book
-                        Courses</a>
-                    <a class="btn btn-small" href="{{ url_for('welcome', name=username) }}">Testing</a>
+                    <a class="btn btn-small" href="{{ url_for('appointments_page') }}?username={{ username }}">Book
+                        Appointment</a>
                     <a class="btn btn-small" href="{{ url_for('logout') }}">Logout</a>
                 </div>
             </header>
@@ -40,22 +39,19 @@
             <!-- Sidebar Container -->
             <aside class="sidebar-container">
                 <nav class="nav-container">
-                    <div class="nav-item active">
+                    <div class="nav-item active" onclick="scrollToSection('overview')">
                         <span>📊</span>
                         <p>Overview</p>
                     </div>
-                    <div class="nav-item">
-                        <span>📚</span>
-                        <p>Courses</p>
+                    <div class="nav-item" onclick="navigateToDoctors()">
+                        <span>🏥</span>
+                        <p>Doctors</p>
                     </div>
-                    <div class="nav-item">
-                        <span>✅</span>
-                        <p>Tasks</p>
+                    <div class="nav-item" onclick="navigateToAppointments()">
+                        <span>📅</span>
+                        <p>Appointments</p>
                     </div>
-                    <div class="nav-item">
-                        <span>⚙️</span>
-                        <p>Settings</p>
-                    </div>
+
                 </nav>
             </aside>
 
@@ -64,146 +60,103 @@
                 <!-- Welcome Banner Container -->
                 <section class="container-banner welcome card">
                     <div>
-                        <h2 style="margin:0">Welcome back, {{ username }} 🎉</h2>
-                        <p class="meta">Here's a quick summary of your account.</p>
+                        <h2 style="margin:0">Welcome back, {{ username }} 👋</h2>
+                        <p class="meta">Book an appointment with our healthcare professionals.</p>
                     </div>
-                    <div class="meta">Last login: <strong>just now</strong></div>
+                    <div class="meta">Health is wealth</div>
                 </section>
 
                 <!-- Stats Grid Container -->
-                <section class="container-grid stats-section">
-                    <h3 style="grid-column: 1 / -1; margin-top: 0;">Quick Stats</h3>
+                <section id="overview" class="container-grid stats-section">
+                    <h3 style="grid-column: 1 / -1; margin-top: 0;">Your Health Overview</h3>
                     <div class="card">
-                        <h3>Projects</h3>
+                        <h3>Appointments</h3>
+                        <div class="value">{{ users.get(username, {}).get('appointments', [])|length }}</div>
+                        <p class="meta">Total bookings</p>
+                    </div>
+                    <div class="card">
+                        <h3>Doctors</h3>
+                        <div class="value">{{ doctors|length }}</div>
+                        <p class="meta">Available specialists</p>
+                    </div>
+                    <div class="card">
+                        <h3>Hospitals</h3>
                         <div class="value">3</div>
-                        <p class="meta">Active projects</p>
-                    </div>
-                    <div class="card">
-                        <h3>Tasks</h3>
-                        <div class="value">12</div>
-                        <p class="meta">Pending tasks</p>
-                    </div>
-                    <div class="card">
-                        <h3>Notifications</h3>
-                        <div class="value">4</div>
-                        <p class="meta">Unread alerts</p>
-                    </div>
-                </section>
-
-                <!-- Flex Container Section -->
-                <section class="container-flex">
-                    <h3>Recent Activity</h3>
-                    <div class="flex-row">
-                        <div class="card card-sm">
-                            <span class="icon">📝</span>
-                            <div>
-                                <h4>Course Enrolled</h4>
-                                <p class="meta">2 hours ago</p>
-                            </div>
-                        </div>
-                        <div class="card card-sm">
-                            <span class="icon">✨</span>
-                            <div>
-                                <h4>Task Completed</h4>
-                                <p class="meta">5 hours ago</p>
-                            </div>
-                        </div>
-                        <div class="card card-sm">
-                            <span class="icon">🏆</span>
-                            <div>
-                                <h4>Badge Earned</h4>
-                                <p class="meta">1 day ago</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Two Column Container -->
-                <section class="container-two-column">
-                    <!-- Left Column -->
-                    <div class="column">
-                        <div class="card">
-                            <h3>📚 Learning Path</h3>
-                            <div class="progress-item">
-                                <div class="progress-label">
-                                    <span>Python Basics</span>
-                                    <span>75%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 75%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-label">
-                                    <span>Web Development</span>
-                                    <span>45%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 45%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column -->
-                    <div class="column">
-                        <div class="card">
-                            <h3>🎯 Goals</h3>
-                            <ul class="goals-list">
-                                <li>✓ Complete React course</li>
-                                <li>✓ Build 2 projects</li>
-                                <li>→ Learn Docker</li>
-                                <li>→ Master Databases</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Card Grid Container with Overlay -->
-                <section class="container-card-grid">
-                    <h3>Featured Courses</h3>
-                    <div class="card-grid">
-                        <div class="card card-featured">
-                            <div class="card-header">Python 101</div>
-                            <div class="card-content">
-                                <p>Learn Python fundamentals</p>
-                                <button class="btn-outline">View Course</button>
-                            </div>
-                        </div>
-                        <div class="card card-featured">
-                            <div class="card-header">Web Dev</div>
-                            <div class="card-content">
-                                <p>HTML, CSS & JavaScript</p>
-                                <button class="btn-outline">View Course</button>
-                            </div>
-                        </div>
-                        <div class="card card-featured">
-                            <div class="card-header">Data Science</div>
-                            <div class="card-content">
-                                <p>Data analysis with Python</p>
-                                <button class="btn-outline">View Course</button>
-                            </div>
-                        </div>
+                        <p class="meta">Partner hospitals</p>
                     </div>
                 </section>
 
             </main>
         </div>
-
-        <!-- Full-Width Section Container -->
-        <section class="container-fluid footer-section">
-            <div class="container">
-                <div class="footer-content">
-                    <p>&copy; 2026 Dashboard. All rights reserved.</p>
-                    <div class="footer-links">
-                        <a href="#">Privacy</a>
-                        <a href="#">Terms</a>
-                        <a href="#">Support</a>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
+
+
+    <script>
+        // Close modal when clicking outside
+        window.addEventListener('click', function (event) {
+            const modal = document.getElementById('settingsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script>
+        // Activate sidebar navigation
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                updateActiveNavItem(event.currentTarget);
+            }
+        }
+
+        function navigateToDoctors() {
+            window.location.href = "{{ url_for('doctors_list') }}?username={{ username }}";
+        }
+
+        function navigateToAppointments() {
+            window.location.href = "{{ url_for('appointments_page') }}?username={{ username }}";
+        }
+
+        function navigateToSettings() {
+            showSettingsModal();
+        }
+
+        function showSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+
+        function updateActiveNavItem(clickedItem) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+            }
+        }
+
+        // Make sidebar items clickable with pointer style
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.style.cursor = 'pointer';
+            item.addEventListener('mouseover', function () {
+                this.style.opacity = '0.8';
+            });
+            item.addEventListener('mouseout', function () {
+                this.style.opacity = '1';
+            });
+        });
+    </script>
 </body>
 
 </html>

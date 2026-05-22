@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='ui.css') }}">
 </head>
 
 <body>
     <div class="container">
-        <link rel="stylesheet" href="{{ url_for('static', filename='ui.css') }}">
         <h2>Register</h2>
         {% if message %}
         <div class="message {% if 'successful' in message %}success{% else %}error{% endif %}">
